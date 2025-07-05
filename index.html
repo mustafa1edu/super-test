@@ -41,16 +41,16 @@
         }
         
         .logo-container {
-            margin-bottom: 20px;
+            margin-bottom: 5px;
             display: flex;
             flex-direction: column;
             align-items: center;
         }
         
         .logo-img {
-            width: 00px;
+            width: 250px;
             height: auto;
-            margin-bottom: 10px;
+            margin-bottom: 0;
             object-fit: contain;
         }
         
@@ -59,7 +59,7 @@
             font-size: 1.8rem;
             font-weight: 800;
             color: white;
-            margin: 10px 0 0;
+            margin: -10px 0 10px;
             text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
         }
         
@@ -336,7 +336,7 @@
             }
             
             .logo-img {
-                width: 250px;
+                width: 300px;
             }
         }
     </style>
@@ -361,7 +361,6 @@
         <div class="instructions">
             <p>١. سەرەتا کلیک بکە لەسەر "تێکەڵکردنی بۆکسەکان" </p>
             <p>٢. بۆکسێک هەڵبژێرە بۆ بینینی خەڵاتەکەت</p>
-    
         </div>
     </div>
     
@@ -376,6 +375,11 @@
             <button class="alert-button" id="alert-button">باشە</button>
         </div>
     </div>
+    
+    <audio id="mix-sound" src="https://assets.mixkit.co/sfx/preview/mixkit-positive-interface-beep-221.mp3" preload="auto"></audio>
+    <audio id="open-sound" src="https://assets.mixkit.co/sfx/preview/mixkit-unlock-game-notification-253.mp3" preload="auto"></audio>
+    <audio id="win-sound" src="https://assets.mixkit.co/sfx/preview/mixkit-winning-chimes-2015.mp3" preload="auto"></audio>
+    <audio id="reveal-sound" src="https://assets.mixkit.co/sfx/preview/mixkit-achievement-bell-600.mp3" preload="auto"></audio>
     
     <script>
         const prizes = [
@@ -393,6 +397,12 @@
         const alertOverlay = document.getElementById('alert-overlay');
         const alertBox = document.getElementById('alert-box');
         const alertButton = document.getElementById('alert-button');
+        
+        // Sound effects
+        const mixSound = document.getElementById('mix-sound');
+        const openSound = document.getElementById('open-sound');
+        const winSound = document.getElementById('win-sound');
+        const revealSound = document.getElementById('reveal-sound');
         
         let boxes = [];
         let boxesMixed = false;
@@ -412,6 +422,7 @@
                 
                 const front = document.createElement('div');
                 front.className = 'box-front';
+                front.innerHTML = '<i class="fas fa-gift" style="font-size: 40px; color: #ec1f26;"></i>';
                 box.appendChild(front);
                 
                 const back = document.createElement('div');
@@ -432,13 +443,19 @@
                     
                     selectedBoxIndex = i;
                     box.classList.add('selected', 'opened');
+                    openSound.play();
                     
                     resultDiv.textContent = `خەڵاتەکەت: ${box.dataset.prize}`;
                     resultDiv.style.display = 'block';
                     
                     setTimeout(() => {
                         prizeRevealed = true;
+                        winSound.play();
                         createFireworks();
+                        setTimeout(() => {
+                            revealSound.play();
+                            openAllBoxes();
+                        }, 1500);
                     }, 300);
                 });
                 
@@ -485,6 +502,7 @@
             isMixing = true;
             mixButton.textContent = 'تێکەڵکردن...';
             mixButton.disabled = true;
+            mixSound.play();
             
             for (let i = prizes.length - 1; i > 0; i--) {
                 const j = Math.floor(Math.random() * (i + 1));
