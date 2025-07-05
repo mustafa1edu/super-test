@@ -3,9 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>بۆکسەکانی خەڵات</title>
+    <title>بۆکسەکانی خەڵات - Super Cleaner</title>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Tajawal:wght@400;700;900&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+Arabic:wght@700&display=swap');
         
         * {
             box-sizing: border-box;
@@ -49,10 +50,14 @@
         }
         
         .logo-sub {
-            font-size: 1rem;
-            color: rgba(255, 255, 255, 0.8);
+            font-family: 'Noto Sans Arabic', sans-serif;
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: white;
             margin-bottom: 20px;
             display: block;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+            letter-spacing: -0.5px;
         }
         
         .container {
@@ -273,6 +278,13 @@
             100% { transform: translateY(1000px) rotate(360deg); opacity: 0; }
         }
         
+        /* Title contrast when boxes are open */
+        body.boxes-open .logo,
+        body.boxes-open .logo-sub {
+            color: #f8f8f8;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+        }
+        
         /* Responsive adjustments */
         @media (min-width: 768px) {
             .main-container {
@@ -285,7 +297,7 @@
             }
             
             .logo-sub {
-                font-size: 1.2rem;
+                font-size: 1.5rem;
             }
             
             .box {
@@ -318,7 +330,7 @@
 <body>
     <div class="main-container">
         <div class="logo">Super <span style="color: #f1c40f;">Cleaner</span>
-            <span class="logo-sub"></span>
+            <span class="logo-sub">بۆکسەکانی خەڵات</span>
         </div>
         
         <button class="mix-btn" onclick="mixBoxes()">تێکەڵکردنی بۆکسەکان</button>
@@ -380,6 +392,7 @@
                 document.querySelector('.mix-btn').textContent = 'تێکەڵکردنی بۆکسەکان';
                 resultDiv.style.display = 'none';
                 selectedBoxIndex = -1;
+                document.body.classList.remove('boxes-open');
                 return;
             }
             
@@ -522,6 +535,9 @@
             selectedBoxIndex = index;
             const box = boxes[index];
             box.classList.add('selected');
+            
+            // Add class to body for title contrast
+            document.body.classList.add('boxes-open');
             
             // ئەنیمەیشنی سوڕانەوە
             setTimeout(() => {
