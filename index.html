@@ -3,7 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>بۆکسەکانی خەڵات - Super Cleaner</title>
+    <title>بۆکسەکانی خەڵات</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Tajawal:wght@400;700;900&display=swap');
         @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+Arabic:wght@700;800&display=swap');
@@ -39,25 +40,27 @@
             z-index: 1;
         }
         
-        .logo {
-            font-family: 'Arial', sans-serif;
-            font-size: 2.2rem;
-            font-weight: bold;
-            color: white;
-            margin-bottom: 8px;
-            text-shadow: 3px 3px 6px rgba(0, 0, 0, 0.3);
-            line-height: 1.2;
+        .logo-container {
+            margin-bottom: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
         }
         
-        .logo-sub {
+        .logo-img {
+            width: 200px;
+            height: auto;
+            margin-bottom: 10px;
+            object-fit: contain;
+        }
+        
+        .title {
             font-family: 'Noto Sans Arabic', sans-serif;
-            font-size: 1.4rem;
+            font-size: 1.8rem;
             font-weight: 800;
             color: white;
-            margin-bottom: 20px;
-            display: block;
+            margin: 10px 0 0;
             text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
-            letter-spacing: -0.5px;
         }
         
         .container {
@@ -84,9 +87,10 @@
             cursor: pointer;
             border-radius: 10px;
             box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
-            transition: transform 0.5s ease, box-shadow 0.3s ease;
+            transition: transform 0.5s ease;
             position: relative;
             transform-style: preserve-3d;
+            user-select: none;
         }
         
         .box-front {
@@ -107,8 +111,8 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            background-color: #27ae60;
-            color: white;
+            background-color: white;
+            color: #ec1f26;
             border-radius: 10px;
             position: absolute;
             backface-visibility: hidden;
@@ -117,6 +121,7 @@
             text-align: center;
             direction: rtl;
             font-size: 20px;
+            border: 3px solid #ec1f26;
         }
         
         .box.opened {
@@ -130,8 +135,18 @@
         
         @keyframes pulse {
             0% { box-shadow: 0 0 0 0 rgba(241, 196, 15, 0.7); }
-            70% { box-shadow: 0 0 0 10px rgba(241, 196, 15, 0); }
+            70% { box-shadow: 0 0 0 15px rgba(241, 196, 15, 0); }
             100% { box-shadow: 0 0 0 0 rgba(241, 196, 15, 0); }
+        }
+        
+        .box.swapping {
+            animation: swapAnimation 0.5s ease-in-out;
+        }
+        
+        @keyframes swapAnimation {
+            0% { transform: translateX(0) scale(1); }
+            50% { transform: translateX(-30px) scale(1.05); }
+            100% { transform: translateX(0) scale(1); }
         }
         
         .mix-btn {
@@ -190,19 +205,100 @@
             direction: rtl;
         }
         
-        .confetti {
+        .alert-overlay {
             position: fixed;
-            width: 8px;
-            height: 8px;
-            background-color: #f00;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: rgba(0, 0, 0, 0.7);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 100;
             opacity: 0;
-            z-index: 10;
-            animation: confetti-fall 3s linear forwards;
+            visibility: hidden;
+            transition: all 0.3s;
         }
         
-        @keyframes confetti-fall {
-            0% { transform: translateY(-100px) rotate(0deg); opacity: 1; }
-            100% { transform: translateY(1000px) rotate(360deg); opacity: 0; }
+        .alert-box {
+            background-color: white;
+            color: #c0392b;
+            padding: 25px;
+            border-radius: 15px;
+            width: 90%;
+            max-width: 400px;
+            text-align: center;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+            transform: scale(0.8);
+            transition: all 0.3s;
+        }
+        
+        .alert-box.show {
+            transform: scale(1);
+        }
+        
+        .alert-icon {
+            font-size: 50px;
+            color: #ec1f26;
+            margin-bottom: 15px;
+        }
+        
+        .alert-message {
+            font-family: 'Noto Sans Arabic', sans-serif;
+            font-size: 18px;
+            font-weight: 800;
+            margin-bottom: 20px;
+        }
+        
+        .alert-button {
+            background-color: #ec1f26;
+            color: white;
+            border: none;
+            padding: 10px 25px;
+            border-radius: 50px;
+            font-family: 'Noto Sans Arabic', sans-serif;
+            font-size: 16px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .alert-button:hover {
+            background-color: #c0392b;
+        }
+        
+        .firework {
+            position: fixed;
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            box-shadow: 0 0 20px 8px;
+            animation: firework-animation 1.5s ease-out forwards;
+            opacity: 0;
+            z-index: 10;
+            pointer-events: none;
+        }
+        
+        @keyframes firework-animation {
+            0% { transform: translate(0, 0); opacity: 1; }
+            100% { transform: translate(var(--tx), var(--ty)); opacity: 0; }
+        }
+        
+        .firework-particle {
+            position: fixed;
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            animation: particle-animation 1.5s ease-out forwards;
+            opacity: 0;
+            z-index: 10;
+            pointer-events: none;
+        }
+        
+        @keyframes particle-animation {
+            0% { transform: translate(0, 0); opacity: 1; }
+            100% { transform: translate(var(--tx), var(--ty)); opacity: 0; }
         }
         
         @media (min-width: 768px) {
@@ -211,12 +307,8 @@
                 padding: 30px;
             }
             
-            .logo {
-                font-size: 2.8rem;
-            }
-            
-            .logo-sub {
-                font-size: 1.6rem;
+            .title {
+                font-size: 2rem;
             }
             
             .box {
@@ -242,13 +334,21 @@
                 font-size: 18px;
                 padding: 15px;
             }
+            
+            .logo-img {
+                width: 250px;
+            }
         }
     </style>
 </head>
 <body>
     <div class="main-container">
-        <div class="logo">Super <span style="color: #f1c40f;">Cleaner</span>
-            <span class="logo-sub">بۆکسەکانی خەڵات</span>
+        <div class="logo-container">
+            <img src="https://lh4.googleusercontent.com/aputnWBG7y-bEeNhqmmGPVlMnnpUT5lmOBee90qmz-HIWwJ1B-UYLkuljVckEQ01jUCUtCi_a3NU3HW172DdVw4k0thPIM6IP_5sEHNLC8srmT07_NUoXgZbquqei6dt7G0_JkrjBGQ=w1280" 
+                 alt="Super Cleaner Logo" 
+                 class="logo-img"
+                 onerror="this.src='https://via.placeholder.com/250x100?text=Super+Cleaner'">
+            <h1 class="title">بۆکسەکانی خەڵات</h1>
         </div>
         
         <button class="mix-btn" id="mix-button">تێکەڵکردنی بۆکسەکان</button>
@@ -266,6 +366,18 @@
         </div>
     </div>
     
+    <div class="alert-overlay" id="alert-overlay">
+        <div class="alert-box" id="alert-box">
+            <div class="alert-icon">
+                <i class="fas fa-exclamation-circle"></i>
+            </div>
+            <div class="alert-message">
+                تکایە یەکەم بۆکسەکان تێکەڵ بکە!
+            </div>
+            <button class="alert-button" id="alert-button">باشە</button>
+        </div>
+    </div>
+    
     <script>
         const prizes = [
             "١٠٠٠$",
@@ -279,10 +391,15 @@
         const boxesContainer = document.getElementById('boxes-container');
         const resultDiv = document.getElementById('result');
         const mixButton = document.getElementById('mix-button');
+        const alertOverlay = document.getElementById('alert-overlay');
+        const alertBox = document.getElementById('alert-box');
+        const alertButton = document.getElementById('alert-button');
+        
         let boxes = [];
         let boxesMixed = false;
         let selectedBoxIndex = -1;
         let isMixing = false;
+        let prizeRevealed = false;
         
         function createBoxes() {
             boxesContainer.innerHTML = '';
@@ -303,17 +420,59 @@
                 back.textContent = prizes[i];
                 box.appendChild(back);
                 
-                // Fixed click handler - only responds to clicks on this box
                 box.addEventListener('click', function(event) {
-                    // Check if click is directly on this box
-                    if (event.target === box || event.target === front) {
-                        selectBox(i);
+                    if (!boxesMixed) {
+                        showAlert();
+                        return;
                     }
+                    
+                    if (prizeRevealed) {
+                        openAllBoxes();
+                        return;
+                    }
+                    
+                    selectedBoxIndex = i;
+                    box.classList.add('selected', 'opened');
+                    
+                    resultDiv.textContent = `خەڵاتەکەت: ${box.dataset.prize}`;
+                    resultDiv.style.display = 'block';
+                    
+                    setTimeout(() => {
+                        prizeRevealed = true;
+                        createFireworks();
+                    }, 300);
                 });
                 
                 boxesContainer.appendChild(box);
                 boxes.push(box);
             }
+        }
+        
+        function showAlert() {
+            alertOverlay.style.opacity = '1';
+            alertOverlay.style.visibility = 'visible';
+            setTimeout(() => {
+                alertBox.classList.add('show');
+            }, 10);
+        }
+        
+        function hideAlert() {
+            alertBox.classList.remove('show');
+            setTimeout(() => {
+                alertOverlay.style.opacity = '0';
+                alertOverlay.style.visibility = 'hidden';
+            }, 300);
+        }
+        
+        function openAllBoxes() {
+            boxes.forEach((box, index) => {
+                setTimeout(() => {
+                    box.classList.add('opened');
+                    if (index === selectedBoxIndex) {
+                        box.classList.add('selected');
+                    }
+                }, index * 100);
+            });
         }
         
         function mixBoxes() {
@@ -328,96 +487,121 @@
             mixButton.textContent = 'تێکەڵکردن...';
             mixButton.disabled = true;
             
-            // Shuffle prizes
             for (let i = prizes.length - 1; i > 0; i--) {
                 const j = Math.floor(Math.random() * (i + 1));
                 [prizes[i], prizes[j]] = [prizes[j], prizes[i]];
             }
             
-            // After mixing completes
+            animateBoxSwapping();
+        }
+        
+        function animateBoxSwapping() {
+            const swapPairs = [];
+            const usedIndices = new Set();
+            
+            for (let i = 0; i < boxes.length; i++) {
+                if (usedIndices.has(i)) continue;
+                
+                let j;
+                do {
+                    j = Math.floor(Math.random() * boxes.length);
+                } while (j === i || usedIndices.has(j));
+                
+                swapPairs.push([i, j]);
+                usedIndices.add(i);
+                usedIndices.add(j);
+            }
+            
+            swapPairs.forEach(([i, j], index) => {
+                setTimeout(() => {
+                    boxes[i].classList.add('swapping');
+                    boxes[j].classList.add('swapping');
+                    
+                    setTimeout(() => {
+                        [boxes[i], boxes[j]] = [boxes[j], boxes[i]];
+                        boxesContainer.insertBefore(boxes[j], boxes[i]);
+                        boxes[i].classList.remove('swapping');
+                        boxes[j].classList.remove('swapping');
+                    }, 500);
+                }, index * 300);
+            });
+            
             setTimeout(() => {
+                boxes.forEach((box, i) => {
+                    box.dataset.prize = prizes[i];
+                    box.querySelector('.box-back').textContent = prizes[i];
+                    box.dataset.index = i;
+                });
+                
                 boxesMixed = true;
                 isMixing = false;
                 mixButton.textContent = 'دووبارەکردنەوە';
                 mixButton.disabled = false;
-                
-                // Update all boxes with new prizes
-                boxes.forEach((box, index) => {
-                    box.dataset.prize = prizes[index];
-                    box.querySelector('.box-back').textContent = prizes[index];
-                });
-            }, 1000);
+            }, swapPairs.length * 300 + 500);
         }
         
         function resetBoxes() {
+            prizeRevealed = false;
+            selectedBoxIndex = -1;
+            resultDiv.style.display = 'none';
             createBoxes();
             boxesMixed = false;
             mixButton.textContent = 'تێکەڵکردنی بۆکسەکان';
-            resultDiv.style.display = 'none';
-            selectedBoxIndex = -1;
         }
         
-        function selectBox(index) {
-            if (!boxesMixed || isMixing) {
-                alert('تکایە یەکەم بۆکسەکان تێکەڵ بکە!');
-                return;
-            }
-            
-            if (selectedBoxIndex >= 0) {
-                // If a box is already selected, open all boxes
-                openAllBoxes();
-                return;
-            }
-            
-            selectedBoxIndex = index;
-            const box = boxes[index];
-            box.classList.add('selected', 'opened');
-            
-            resultDiv.textContent = `خەڵاتەکەت: ${box.dataset.prize}`;
-            resultDiv.style.display = 'block';
-            
-            // After 1.5 seconds, open all boxes
-            setTimeout(openAllBoxes, 1500);
-            
-            // Create confetti celebration
-            createConfetti();
-        }
-        
-        function openAllBoxes() {
-            boxes.forEach((box, index) => {
+        function createFireworks() {
+            for (let burst = 0; burst < 3; burst++) {
                 setTimeout(() => {
-                    box.classList.add('opened');
-                    if (index === selectedBoxIndex) {
-                        box.classList.add('selected');
-                    } else {
-                        box.classList.remove('selected');
+                    const x = Math.random() * window.innerWidth;
+                    const y = Math.random() * window.innerHeight/2 + window.innerHeight/4;
+                    
+                    for (let i = 0; i < 20; i++) {
+                        const angle = (Math.PI * 2) * (i / 20);
+                        const distance = 100 + Math.random() * 200;
+                        const tx = Math.cos(angle) * distance;
+                        const ty = Math.sin(angle) * distance;
+                        
+                        const firework = document.createElement('div');
+                        firework.className = 'firework';
+                        firework.style.left = x + 'px';
+                        firework.style.top = y + 'px';
+                        firework.style.backgroundColor = getRandomColor();
+                        firework.style.setProperty('--tx', tx + 'px');
+                        firework.style.setProperty('--ty', ty + 'px');
+                        document.body.appendChild(firework);
+                        
+                        setTimeout(() => firework.remove(), 1500);
                     }
-                }, index * 100);
-            });
-        }
-        
-        function createConfetti() {
-            for (let i = 0; i < 50; i++) {
-                const confetti = document.createElement('div');
-                confetti.className = 'confetti';
-                confetti.style.left = Math.random() * 100 + 'vw';
-                confetti.style.backgroundColor = getRandomColor();
-                confetti.style.animationDelay = (i * 0.1) + 's';
-                document.body.appendChild(confetti);
-                
-                setTimeout(() => {
-                    confetti.remove();
-                }, 3000);
+                    
+                    for (let i = 0; i < 50; i++) {
+                        const angle = Math.random() * Math.PI * 2;
+                        const distance = 50 + Math.random() * 200;
+                        const tx = Math.cos(angle) * distance;
+                        const ty = Math.sin(angle) * distance;
+                        
+                        const particle = document.createElement('div');
+                        particle.className = 'firework-particle';
+                        particle.style.left = x + 'px';
+                        particle.style.top = y + 'px';
+                        particle.style.backgroundColor = getRandomColor();
+                        particle.style.setProperty('--tx', tx + 'px');
+                        particle.style.setProperty('--ty', ty + 'px');
+                        particle.style.animationDelay = Math.random() * 0.3 + 's';
+                        document.body.appendChild(particle);
+                        
+                        setTimeout(() => particle.remove(), 1800);
+                    }
+                }, burst * 400);
             }
         }
         
         function getRandomColor() {
-            const colors = ['#f1c40f', '#e74c3c', '#3498db', '#2ecc71', '#9b59b6', '#1abc9c'];
+            const colors = ['#f1c40f', '#e74c3c', '#3498db', '#2ecc71', '#9b59b6', '#1abc9c', '#ff9ff3', '#feca57'];
             return colors[Math.floor(Math.random() * colors.length)];
         }
         
-        // Initialize
         mixButton.addEventListener('click', mixBoxes);
+        alertButton.addEventListener('click', hideAlert);
         window.onload = createBoxes;
     </script>
 </body>
